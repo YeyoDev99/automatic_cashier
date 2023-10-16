@@ -1,0 +1,63 @@
+* {
+    background-color: #cbe5c0;
+}
+
+.identification {
+    min-width: 50%;
+    margin: 4rem 0;
+    border: solid;
+    border-color: #4acabb;
+    padding: 2rem;
+    border-width: 0.1px;
+    font-family: 'Pixelify Sans', sans-serif;
+}
+
+.identification input:focus {
+    box-shadow: 0 0 0 0.2rem #4acabb;
+}
+
+.identification button {
+    background-color: #4acabb;
+    border: #4acabb;
+}
+
+.identification button:hover {
+    background-color: #fcf9c2;
+    border-color: #fcf9c2;
+    color: #cbe5c0;
+}
+
+.identification button:active {
+    background-color: #84407b;
+    border-color: #84407b;
+}
+
+
+.log-in h1 {
+    margin-top: 2rem;
+    color: #4acabb;
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 3rem;
+}
+
+.log-in a {
+    margin-top: 1rem;
+    text-decoration: none;
+    color: #4acabb;
+}
+
+.log-in a:hover {
+    color: #fcf9c2;
+}
+
+
+.log-in a:active {
+    color: #84407b;
+}
+
+
+
+
+.identification input {
+    margin: 2rem 0;
+}

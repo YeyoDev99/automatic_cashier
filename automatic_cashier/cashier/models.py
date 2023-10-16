@@ -2,16 +2,15 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
-    direction = models.TextField()
-    cellphone = models.CharField(max_length=10)
+    direction = models.TextField(default="not apply")
+    cellphone = models.CharField(max_length=10, default='not apply')
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}" 
 
 
 class Account(models.Model):
-    balance = models.FloatField()
-    password = models.CharField(max_length=80)
+    balance = models.FloatField(default=0)
     opening_date = models.DateField(auto_now_add=True)
     client = models.ForeignKey(User, on_delete= models.CASCADE)
 
@@ -20,7 +19,7 @@ class Account(models.Model):
 
 
 class CreditCard(models.Model):
-    account = models.OneToOneField(Account, on_delete=models.CASCADE)
+    account = models.OneToOneField(Account, on_delete=models.CASCADE, default=1)
     password = models.CharField(max_length=4)
     id_limit  = models.IntegerField(default=3)        
     activation = models.BooleanField(default=True)
