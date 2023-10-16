@@ -12,7 +12,7 @@
                 </div>
                 {% endfor %}
             {% endif %}
-            
+            <input placeholder="indicate your email address" class='form-control' name="email" type="email">
             <input placeholder="indicate your account password" class='form-control' name="password" type="password">
             <button class="btn btn-primary" type="submit">access</button>
             <a href=" {% url 'cashier:sign_up'  %} ">haven't created an account yet?</a>

@@ -8,17 +8,26 @@ from django.contrib.auth import login, logout, authenticate
 
 def index(request):
     if request.method == 'POST':
-        password = request.POST['password']
+        email = request.POST['email']
         try:
-            user= User.objects.get(password = password)
+            user= User.objects.get(email = email)
         except:
             messages.error(request, "the account doesn't exist")
         else:
-            pass
-            # try:
-            #     credit_card = CreditCard.objects.get(account=account)
-            # except:
-            #     return redirect("cashier:card_activation")
+            password = request.POST['password']
+            user = authenticate(request, email=email, password =password)
+            if user is None:
+                messages.error(request, "email or password incorrect")
+            else:
+                login(request, user)
+                account = Account.objects.get(client=user)
+                try:
+                    credit_card = CreditCard.objects.get(account=account)
+                except:
+                    return redirect("cashier:card_activation")
+                else:
+                    return redirect('cashier:menu')       
+
     context = {
 
     }
@@ -36,6 +45,9 @@ def sign_up(request):
                 credit_card = CreditCard.objects.get(account=account)
             except:
                 return redirect("cashier:card_activation")
+            else:
+                return redirect('cashier:menu')       
+
         else:
             messages.error(request, "something went wrong during registration")
     form = UserRegistrationForm()
@@ -54,9 +66,21 @@ def card_activation(request):
             account = Account.objects.get(client=request.user)
             card.account = account
             card.save()
-            return redirect('cashier:index')       
+            return redirect('cashier:menu')       
     form = CardActivation()
     context = {
         'form': form
     }
     return render(request, 'cashier/card_activation.html', context)
+
+
+def menu(request):
+    context = {
+
+    }
+    return render(request, 'cashier/menu.html', context)
+
+
+def logout_user(request):
+    logout(request)
+    return redirect('cashier:index')

@@ -33,7 +33,7 @@
 }
 
 
-.log-in h1 {
+.log-in h1, .log-in h3 {
     margin-top: 2rem;
     color: #4acabb;
     font-family: 'Pixelify Sans', sans-serif;
