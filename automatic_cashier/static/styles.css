@@ -33,7 +33,7 @@
 }
 
 
-.log-in h1, .log-in h3 {
+.log-in h1, .log-in h3, .menu-container h4 {
     margin-top: 2rem;
     color: #4acabb;
     font-family: 'Pixelify Sans', sans-serif;
@@ -46,18 +46,49 @@
     color: #4acabb;
 }
 
-.log-in a:hover {
-    color: #fcf9c2;
-}
 
 
-.log-in a:active {
+
+.log-in a:active, .exit:hover, .menu a:hover  {
     color: #84407b;
 }
 
+.log-in a:hover, .menu a:hover  {
+    color: #fcf9c2;
+    border-color: #fcf9c2;
+}
 
+.exit {
+    margin-top: 2rem;
+    margin-left: 1rem;
+    text-decoration: none;
+    color: #4acabb;
+    font-size: 1.7rem;
+    font-family: 'Pixelify Sans', sans-serif;
+    text-align: center;
+
+}
 
 
 .identification input {
     margin: 2rem 0;
+}
+
+/* menu template */
+
+.menu .even {
+    text-align: end;
+}
+
+.menu a {
+    margin-top: 6rem;
+    font-size: 2rem;
+    color: #4acabb;
+    text-decoration: none;
+    font-family: 'Pixelify Sans', sans-serif;
+    border: solid;
+    border-width: 1px;
+    border-color: #4acabb;
+    max-width: 25rem;
+
 }

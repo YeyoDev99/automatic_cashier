@@ -8,5 +8,7 @@ urlpatterns = [
     path("sign_up/", views.sign_up, name='sign_up'),
     path('card_activation/', views.card_activation, name='card_activation'),
     path('menu/', views.menu, name='menu'),
-    path('logout/', views.logout_user, name='logout')
+    path('logout/', views.logout_user, name='logout'),
+    path('check_balance/<int:boolean>/', views.check_balance, name='check_balance'),
+    path('card_validation/', views.card_validation, name='card_validation')
 ]

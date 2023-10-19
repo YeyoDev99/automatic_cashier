@@ -4,9 +4,11 @@ from django.contrib import messages
 from .models import *
 from .forms import *
 from django.contrib.auth import login, logout, authenticate
-
+from django.contrib.auth.decorators import login_required
 
 def index(request):
+    if request.user.is_authenticated:
+        return redirect('cashier:menu')
     if request.method == 'POST':
         email = request.POST['email']
         try:
@@ -81,6 +83,23 @@ def menu(request):
     return render(request, 'cashier/menu.html', context)
 
 
+@login_required(login_url='cashier:index')
 def logout_user(request):
     logout(request)
     return redirect('cashier:index')
+
+
+@login_required(login_url='cashier:index')
+def check_balance(request, boolean):
+    bool = bool(boolean)
+    if not bool:
+        return redirect('cashier:card_validation')
+    else:
+        pass
+
+
+@login_required(login_url='cashier:index')
+def card_validation(request):
+    user = request.user
+    account = Account.objects.get(client=user)
+    card = CreditCard.objects.get(account = account)

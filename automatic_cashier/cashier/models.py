@@ -38,26 +38,4 @@ class Cashier(models.Model):
     max_withdrawal_amount = models.FloatField() 
     CreditCards = models.ManyToManyField(CreditCard, related_name="credit_cards")    
 
-    def validate_card(self):
-        pass
 
-    def validate_pin(self, pin):
-        pass
-
-    def check_balance(self):
-        return self.available_balance
-
-    def purchase_tickets(self, amount):
-        pass
-
-    def access_account(self, pin):
-        pass
-
-    def deposit_money(self, amount):
-        pass
-
-    def withdraw_money(self, amount):
-        pass
-
-    def request_replenishment(self, amount):       
-        pass
