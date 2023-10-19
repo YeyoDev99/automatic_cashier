@@ -5,6 +5,8 @@ from .models import *
 from .forms import *
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
+
 
 def index(request):
     if request.user.is_authenticated:
@@ -90,16 +92,40 @@ def logout_user(request):
 
 
 @login_required(login_url='cashier:index')
-def check_balance(request, boolean):
-    bool = bool(boolean)
-    if not bool:
-        return redirect('cashier:card_validation')
-    else:
-        pass
-
+def check_balance(request):
+    user = request.user
+    account = Account.objects.get(client=user)
+    context = {
+        'account': account
+    }
+    return render(request, 'cashier/check_balance.html', context)
 
 @login_required(login_url='cashier:index')
-def card_validation(request):
+def card_validation(request, trans):
     user = request.user
     account = Account.objects.get(client=user)
     card = CreditCard.objects.get(account = account)
+    tries = 0
+    # task for new session: fix the try loop problem
+    if request.method == 'POST':
+        if card.password == request.POST['card-password']:
+            if trans == 1:
+                return redirect('cashier:check_balance')
+        else:
+            tries += 1
+            if tries == card.id_limit:
+                card.activation=False
+                card.save()
+                messages.error(request, f'wrong password, your credit card has been blocked')
+
+                return redirect('cashier:menu')
+            messages.error(request, f'wrong password, you have {3-tries} left')
+            context = {
+                'tries': tries
+            }
+            
+            return render(request, 'cashier/card_validation.html', context)
+    context = {
+        'tries': tries
+    }
+    return render(request, 'cashier/card_validation.html', context)
