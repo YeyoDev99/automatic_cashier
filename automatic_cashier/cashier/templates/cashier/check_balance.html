@@ -2,11 +2,9 @@
 
 {% block content %}
 
-<section class='balance-container d-flex flex-column justify-content-center align-items-center container'>
-    <h4>welcome back {{request.user}} </h4>
-    <div class='balance row d-flex justify-content-between container'>
-        <p>balance: {{account.balance}}</p>
-    </div>
+<section class='balance-container d-flex flex-column justify-content-center text-center align-items-center container'>
+    <h4><span class='title'>Welcome:</span><br> <span class='text'>{{request.user}}</span>  </h4>
+    <p><span class='title'>Balance:</span> <br> <span class='text'>{{account.balance}}$</span></p>
 
 </section>
 

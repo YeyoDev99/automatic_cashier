@@ -3,11 +3,19 @@
 {% block content %}
     <section class='menu-container d-flex flex-column justify-content-center align-items-center container'>
         <h4>welcome back {{request.user}} </h4>
+        {% if messages %}
+        {% for m in messages %}
+        <div class="alert alert-danger" role="alert">
+            {{m}}
+            </div>
+            {% endfor %}
+        {% endif %}
+
         <div class='menu row d-flex justify-content-between container'>
-            <a  href='{% url 'cashier:card_validation' 1 %} ' class='col-md-6 '><i class="bi bi-piggy-bank"></i>   Check Balance </a>
-            <a  href='#' class='col-md-6 even'>Purchase Tickets <i class="bi bi-ticket-perforated"></i></a>
-            <a  href='#' class='col-md-6'><i class="bi bi-wallet"></i>   Deposit Money </a>
-            <a  href='#' class='col-md-6 even'>Withdraw Money <i class="bi bi-wallet2"></i></a>
+            <a  href='{% url 'cashier:card_validation' 1 0 %} ' class='col-md-6 '><i class="bi bi-piggy-bank"></i>   Check Balance </a>
+            <a  href=' {% url 'cashier:card_validation' 2 0 %} ' class='col-md-6 even'>Purchase Tickets <i class="bi bi-ticket-perforated"></i></a>
+            <a  href='{% url 'cashier:card_validation' 3 0 %}' class='col-md-6'><i class="bi bi-wallet"></i>   Deposit Money </a>
+            <a  href='{% url 'cashier:card_validation' 4 0 %}' class='col-md-6 even'>Withdraw Money <i class="bi bi-wallet2"></i></a>
 
         </div>
 

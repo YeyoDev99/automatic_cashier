@@ -10,5 +10,6 @@ urlpatterns = [
     path('menu/', views.menu, name='menu'),
     path('logout/', views.logout_user, name='logout'),
     path('check_balance/', views.check_balance, name='check_balance'),
-    path('card_validation/<int:trans>/', views.card_validation, name='card_validation')
+    path('card_validation/<int:trans>/<int:tries>/', views.card_validation, name='card_validation'),
+    path('deposit_money/', views.deposit_money, name='deposit_money')
 ]

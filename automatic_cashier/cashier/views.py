@@ -101,31 +101,58 @@ def check_balance(request):
     return render(request, 'cashier/check_balance.html', context)
 
 @login_required(login_url='cashier:index')
-def card_validation(request, trans):
+def card_validation(request, trans, tries):
     user = request.user
     account = Account.objects.get(client=user)
     card = CreditCard.objects.get(account = account)
-    tries = 0
     # task for new session: fix the try loop problem
+    if card.activation == False:
+        messages = [f'sorry, your credit card is blocked']
+        context = {
+            'messages': messages
+        }
+        return render(request, 'cashier/menu.html', context)
+
     if request.method == 'POST':
         if card.password == request.POST['card-password']:
             if trans == 1:
                 return redirect('cashier:check_balance')
+            elif trans == 2:
+                pass
+            elif trans == 3:
+                return redirect('cashier:deposit_money')
+            elif trans == 4:
+                pass
+    
         else:
             tries += 1
             if tries == card.id_limit:
                 card.activation=False
                 card.save()
-                messages.error(request, f'wrong password, your credit card has been blocked')
-
-                return redirect('cashier:menu')
-            messages.error(request, f'wrong password, you have {3-tries} left')
+                messages = [f'wrong password, your credit card has been blocked']
+                context = {
+                    'messages': messages
+                }
+                return render(request, 'cashier/menu.html', context)
+            messages = [f'wrong password, you have {3-tries} tries left {tries}']
             context = {
-                'tries': tries
-            }
-            
+            'trans': trans, 
+            'tries': tries,
+            'messages': messages
+                }
             return render(request, 'cashier/card_validation.html', context)
     context = {
+        'trans': trans, 
         'tries': tries
     }
     return render(request, 'cashier/card_validation.html', context)
+
+
+def deposit_money(request):
+    context = {
+
+    }
+    return render(request, 'cashier/deposit_money.html', context)
+
+
+

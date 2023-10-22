@@ -3,7 +3,7 @@
 {% block content %}
     <section class='log-in d-flex flex-column justify-content-center align-items-center container-fluid'>
         <h3>digit your credit card password</h3>
-        <form class='identification d-flex flex-column justify-content-center align-items-center' method='POST' action=''>
+        <form class='identification d-flex flex-column justify-content-center align-items-center' method='POST' action=' {% url 'cashier:card_validation'  trans tries %} '>
             {% csrf_token %}
             {% if messages %}
             {% for m in messages %}
