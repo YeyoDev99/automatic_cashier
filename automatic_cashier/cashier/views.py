@@ -107,9 +107,9 @@ def card_validation(request, trans, tries):
     card = CreditCard.objects.get(account = account)
     # task for new session: fix the try loop problem
     if card.activation == False:
-        messages = [f'sorry, your credit card is blocked']
+        e_messages = [f'sorry, your credit card is blocked']
         context = {
-            'messages': messages
+            'messages': e_messages
         }
         return render(request, 'cashier/menu.html', context)
 
@@ -120,7 +120,21 @@ def card_validation(request, trans, tries):
             elif trans == 2:
                 pass
             elif trans == 3:
-                return redirect('cashier:deposit_money')
+                # return redirect('cashier:deposit_money')
+                money = request.POST['money']
+                if money > account.balance:
+                    messages.error(request, 'insufficient balance to complete the transaction')
+                username = request.POST['user']
+                user = User.objects.get(email=username)
+                account = Account.objects.get(client=user)
+                account.balance += money
+                account.save()                
+                s_messages = [f'your transaction has been successful']
+                context = {
+                's-messages': s_messages
+                }
+                return render(request, 'cashier/menu.html', context)
+                
             elif trans == 4:
                 pass
     
@@ -152,7 +166,7 @@ def deposit_money(request):
     context = {
 
     }
-    return render(request, 'cashier/deposit_money.html', context)
 
+    return render(request, 'cashier/deposit_money.html', context)
 
 
