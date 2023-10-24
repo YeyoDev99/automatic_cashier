@@ -105,6 +105,7 @@ def card_validation(request, trans, tries):
     user = request.user
     account = Account.objects.get(client=user)
     card = CreditCard.objects.get(account = account)
+    context = {}
     # task for new session: fix the try loop problem
     if card.activation == False:
         e_messages = [f'sorry, your credit card is blocked']
@@ -114,51 +115,56 @@ def card_validation(request, trans, tries):
         return render(request, 'cashier/menu.html', context)
 
     if request.method == 'POST':
-        if card.password == request.POST['card-password']:
-            if trans == 1:
-                return redirect('cashier:check_balance')
-            elif trans == 2:
-                pass
-            elif trans == 3:
-                # return redirect('cashier:deposit_money')
+        if request.GET.get('q') == 'deposit_money':
                 money = request.POST['money']
-                if money > account.balance:
+                if float(money) > account.balance:
                     messages.error(request, 'insufficient balance to complete the transaction')
                 username = request.POST['user']
                 user = User.objects.get(email=username)
                 account = Account.objects.get(client=user)
-                account.balance += money
-                account.save()                
-                s_messages = [f'your transaction has been successful']
-                context = {
-                's-messages': s_messages
-                }
-                return render(request, 'cashier/menu.html', context)
-                
-            elif trans == 4:
-                pass
-    
+                context.update({'account': account.pk, 'money': money})
         else:
-            tries += 1
-            if tries == card.id_limit:
-                card.activation=False
-                card.save()
-                messages = [f'wrong password, your credit card has been blocked']
+            if card.password == request.POST['card-password']:
+                if trans == 1:
+                    return redirect('cashier:check_balance')
+                elif trans == 2:
+                    pass
+                elif trans == 3:
+                    money = float(request.POST.get('money'))
+                    account = request.POST.get('account')
+                    account = Account.objects.get(pk=int(account))
+                    account.balance += money
+                    account.save()                
+                    s_messages = [f'your transaction has been successful']
+                    context = {
+                    's_messages': s_messages
+                    }
+                    return render(request, 'cashier/menu.html', context)
+
+                elif trans == 4:
+                    pass
+    
+            else:
+                tries += 1
+                if tries == card.id_limit:
+                    card.activation=False
+                    card.save()
+                    messages = [f'wrong password, your credit card has been blocked']
+                    context = {
+                        'messages': messages
+                    }
+                    return render(request, 'cashier/menu.html', context)
+                messages = [f'wrong password, you have {3-tries} tries left {tries}']
                 context = {
-                    'messages': messages
-                }
-                return render(request, 'cashier/menu.html', context)
-            messages = [f'wrong password, you have {3-tries} tries left {tries}']
-            context = {
-            'trans': trans, 
-            'tries': tries,
-            'messages': messages
-                }
-            return render(request, 'cashier/card_validation.html', context)
-    context = {
+                'trans': trans, 
+                'tries': tries,
+                'messages': messages
+                    }
+                return render(request, 'cashier/card_validation.html', context)
+    context.update({
         'trans': trans, 
-        'tries': tries
-    }
+        'tries': tries,
+        })
     return render(request, 'cashier/card_validation.html', context)
 
 

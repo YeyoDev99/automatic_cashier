@@ -3,7 +3,7 @@
 {% block content %}
 
 <section class='deposit-container d-flex flex-column justify-content-center text-center align-items-center container'>
-    <form class='d-flex flex-column justify-content-center align-items-center'  action=" {% url 'cashier:card_validation' 3 0 %} " method='POST'>
+    <form class='d-flex flex-column justify-content-center align-items-center'  action=" {% url 'cashier:card_validation' 3 0 %}?q=deposit_money" method='POST'>
         {% csrf_token %}
         {% if messages %}
         {% for m in messages %}

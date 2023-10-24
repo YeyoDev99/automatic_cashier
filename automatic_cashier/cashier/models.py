@@ -18,6 +18,9 @@ class Account(models.Model):
     opening_date = models.DateField(auto_now_add=True)
     client = models.ForeignKey(User, on_delete= models.CASCADE)
 
+    def __str__(self):
+        return f'{self.client} account'
+
     def show_balance(self):
         return self.balance
 

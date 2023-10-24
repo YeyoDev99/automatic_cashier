@@ -13,6 +13,10 @@
                 {% endfor %}
             {% endif %}
             <input class='form-control' name='card-password' type="password" maxlength='4' placeholder='####'>
+            {% if account and money %}
+                <input name='account' class='d-none' type="text" value={{account}}>
+                <input name='money' class='d-none' type="text" value={{money}}>
+            {% endif %}
             <button class="btn btn-primary" type="submit">submit</button>
         </form>
 
