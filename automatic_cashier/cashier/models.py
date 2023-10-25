@@ -5,6 +5,7 @@ class User(AbstractUser):
     direction = models.TextField(default="not apply")
     cellphone = models.CharField(max_length=10, default='not apply')
     email = models.EmailField(max_length=255, unique=True)
+    username = models.CharField(max_length=150, unique=False, null=True, blank=True)
     USERNAME_FIELD = 'email'
 
     REQUIRED_FIELDS = ['password', 'password2']
@@ -14,7 +15,7 @@ class User(AbstractUser):
 
 
 class Account(models.Model):
-    balance = models.FloatField(default=0)
+    balance = models.FloatField(default=999999.99)
     opening_date = models.DateField(auto_now_add=True)
     client = models.ForeignKey(User, on_delete= models.CASCADE)
 
@@ -27,7 +28,7 @@ class Account(models.Model):
 
 class CreditCard(models.Model):
     account = models.OneToOneField(Account, on_delete=models.CASCADE, default=1)
-    password = models.CharField(max_length=4)
+    password = models.CharField(max_length=4, unique=True)
     id_limit  = models.IntegerField(default=3)        
     activation = models.BooleanField(default=True)
 

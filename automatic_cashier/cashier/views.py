@@ -61,7 +61,7 @@ def sign_up(request):
     return render(request, 'cashier/sign_up.html', context)
 
 
-
+@login_required(login_url='cashier:index')
 def card_activation(request):
     if request.method == 'POST':
         form = CardActivation(request.POST)
@@ -70,7 +70,9 @@ def card_activation(request):
             account = Account.objects.get(client=request.user)
             card.account = account
             card.save()
-            return redirect('cashier:menu')       
+            return redirect('cashier:menu') 
+        else:
+            messages.error(request, f'your credit card password is already been used by another account, please use another')      
     form = CardActivation()
     context = {
         'form': form
@@ -78,10 +80,15 @@ def card_activation(request):
     return render(request, 'cashier/card_activation.html', context)
 
 
+@login_required(login_url='cashier:index')
 def menu(request):
-    context = {
-
-    }
+    user = request.user
+    account = Account.objects.get(client=user)
+    card = CreditCard.objects.get(account = account)
+    context = {}
+    if card.activation == False:
+        messages = [f'your credit card is blocked']
+        context.update({'messages': messages})
     return render(request, 'cashier/menu.html', context)
 
 
@@ -100,6 +107,7 @@ def check_balance(request):
     }
     return render(request, 'cashier/check_balance.html', context)
 
+
 @login_required(login_url='cashier:index')
 def card_validation(request, trans, tries):
     user = request.user
@@ -116,23 +124,65 @@ def card_validation(request, trans, tries):
 
     if request.method == 'POST':
         if request.GET.get('q') == 'deposit_money':
-                money = request.POST['money']
-                if float(money) > account.balance:
-                    messages.error(request, 'insufficient balance to complete the transaction')
+            money = request.POST['money']
+            if (float(money) > account.balance) and request.user.email != request.POST['user']:
+                messages = [f'insufficient balance to complete the transaction']
+                context = {
+                    'messages': messages
+                }
+                return render(request, 'cashier/deposit.html', context)
+            else:
                 username = request.POST['user']
                 user = User.objects.get(email=username)
                 account = Account.objects.get(client=user)
                 context.update({'account': account.pk, 'money': money})
+
+        elif request.GET.get('q') == 'purchase_tickets':
+            tickets = request.POST['tickets']
+            money = float(tickets)*10000
+            if float(money) > account.balance:
+                messages = [f'insufficient balance to complete the transaction']
+                context = {
+                    'messages': messages
+                }
+                return render(request, 'cashier/purchase_tickets.html', context)
+            else:
+                context.update({'tickets': tickets})
+        elif request.GET.get('q') == 'withdraw_money':
+            money = request.POST['money']
+            if float(money) > account.balance:
+                messages = [f'insufficient balance to complete the transaction']
+                context = {
+                    'messages': messages
+                }
+                return render(request, 'cashier/withdraw_money.html', context)
+            else:
+                context.update({'money_withdraw': money})
+
         else:
             if card.password == request.POST['card-password']:
                 if trans == 1:
                     return redirect('cashier:check_balance')
                 elif trans == 2:
-                    pass
+                    tickets = int(request.POST.get('tickets'))
+                    money = tickets*10000
+                    request_account= Account.objects.get(client=request.user)
+                    request_account.balance -= money
+                    request_account.save()
+                    s_messages = [f'your transaction has been successful']
+                    context = {
+                    's_messages': s_messages
+                    }
+                    return render(request, 'cashier/menu.html', context)
+
                 elif trans == 3:
                     money = float(request.POST.get('money'))
+                    request_account= Account.objects.get(client=request.user)
                     account = request.POST.get('account')
                     account = Account.objects.get(pk=int(account))
+                    if request_account != account:
+                        request_account.balance -= money
+                        request_account.save()
                     account.balance += money
                     account.save()                
                     s_messages = [f'your transaction has been successful']
@@ -142,7 +192,15 @@ def card_validation(request, trans, tries):
                     return render(request, 'cashier/menu.html', context)
 
                 elif trans == 4:
-                    pass
+                    money = float(request.POST.get('money'))
+                    request_account= Account.objects.get(client=request.user)
+                    request_account.balance -= money
+                    request_account.save()
+                    s_messages = [f'your transaction has been successful']
+                    context = {
+                    's_messages': s_messages
+                    }
+                    return render(request, 'cashier/menu.html', context)
     
             else:
                 tries += 1
@@ -154,7 +212,7 @@ def card_validation(request, trans, tries):
                         'messages': messages
                     }
                     return render(request, 'cashier/menu.html', context)
-                messages = [f'wrong password, you have {3-tries} tries left {tries}']
+                messages = [f'wrong password, you have {3-tries} tries left']
                 context = {
                 'trans': trans, 
                 'tries': tries,
@@ -168,11 +226,29 @@ def card_validation(request, trans, tries):
     return render(request, 'cashier/card_validation.html', context)
 
 
-def deposit_money(request):
-    context = {
+@login_required(login_url='cashier:index')
+def deposit(request):
+    context = {}
+    return render(request, 'cashier/deposit.html', context)
 
-    }
 
+@login_required(login_url='cashier:index')
+def deposit_money(request):    
+    context = {}
+    if request.GET.get('q') == 'another_account':
+        context.update({'another': 'another'})
+    else:
+        context.update({'self': 'self'})
     return render(request, 'cashier/deposit_money.html', context)
 
 
+@login_required(login_url='cashier:index')
+def purchase_tickets(request):
+    context = {}
+    return render(request, 'cashier/purchase_tickets.html', context)
+
+
+@login_required(login_url='cashier:index')
+def withdraw_money(request):
+    context = {}
+    return render(request, 'cashier/withdraw_money.html', context)

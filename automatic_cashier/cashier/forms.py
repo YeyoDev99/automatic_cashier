@@ -28,7 +28,7 @@ class UserRegistrationForm(UserCreationForm):
 class CardActivation(ModelForm):
     password = forms.CharField(
         label= "Credit Card Password Set Up",
-        widget=forms.PasswordInput(attrs={'class':'form-control', 'type':'password','placeholder':'####', 'id': 'password', 'maxlength': '4'}),
+        widget=forms.PasswordInput(attrs={'class':'form-control password', 'type':'password','placeholder':'####', 'id': 'password', 'maxlength': '4'}),
     )       
     class Meta:
         model = CreditCard

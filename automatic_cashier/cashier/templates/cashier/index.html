@@ -4,6 +4,7 @@
     <section class='log-in d-flex flex-column justify-content-center align-items-center container-fluid'>
         <h1>Welcome to the banky digital ATM</h1>
         <form class='identification d-flex flex-column justify-content-center align-items-center' method='POST' action=''>
+            <h4 class='log_title'>access the cashier</h4>
             {% csrf_token %}
             {% if messages %}
             {% for m in messages %}

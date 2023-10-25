@@ -15,12 +15,12 @@
 
 .log-in h1, .log-in h3, .menu-container h4{
     margin-top: 2rem;
-    color: #4acabb;
+    color: #84407b;
     font-family: 'Pixelify Sans', sans-serif;
     font-size: 3rem;
 }
 
-.menu-container div {
+.menu-container div, .alert {
     font-family: 'Pixelify Sans', sans-serif;
     font-size: 1.5rem;
     margin-top: 2rem;
@@ -99,8 +99,9 @@
 
 
 .balance-container {
-    padding-top: 8rem;   
+    padding-top: 8rem;
 }
+
 
 .deposit-container .form-control {
     max-width: 14rem;
@@ -111,6 +112,10 @@
 .deposit-container button {
     font-family: 'Pixelify Sans', sans-serif;
 
+}
+
+.identification .password {
+    max-width: 4.3rem;
 }
 
 
@@ -136,4 +141,20 @@
 
 .btn-close {
     color: #4acabb;
+}
+
+.log_title {
+    color: #4acabb;
+    font-size: 2.5rem;
+}
+
+.deposit-container p {
+    font-size: 1.3rem;
+    color: #4acabb;
+    text-decoration: none;
+    font-family: 'Pixelify Sans', sans-serif;
+    border: solid;
+    border-width: 1px;
+    border-color: #4acabb;
+    padding: 0.5rem;
 }
